@@ -5,11 +5,22 @@ class AlunoService{
 
     async findMany(page, pageSize){
         //SELECT * FROM alunos
-        const alunos = await prisma.aluno.findMany({
-            skip: (page-1)*pageSize,
-            take: Number(pageSize)
-        });
-        return alunos;
+       const skip = (Number(page) - 1) * Number(pageSize);
+        const take = Number(pageSize);
+
+        // Busca paginada, ordenada e a contagem total simultaneamente
+        const [alunos, total] = await Promise.all([
+            prisma.aluno.findMany({
+                skip,
+                take,
+                orderBy: {
+                    [orderBy]: order
+                }
+            }),
+            prisma.aluno.count()
+        ]);
+
+        return { alunos, total };
     }
 
     async create(aluno){
