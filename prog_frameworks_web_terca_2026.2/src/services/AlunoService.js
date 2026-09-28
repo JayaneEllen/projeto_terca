@@ -3,12 +3,10 @@ const AlunoInvalidoError = require("../errors/AlunoInvalidoError");
 
 class AlunoService{
 
-    async findMany(page, pageSize){
-        //SELECT * FROM alunos
-       const skip = (Number(page) - 1) * Number(pageSize);
+    async findMany(page, pageSize, orderBy = "id", order = "asc"){
+        const skip = (Number(page) - 1) * Number(pageSize);
         const take = Number(pageSize);
 
-        // Busca paginada, ordenada e a contagem total simultaneamente
         const [alunos, total] = await Promise.all([
             prisma.aluno.findMany({
                 skip,
