@@ -46,6 +46,18 @@ class AlunoService{
 
         return aluno;
     }
+
+    async update(id, data){
+        
+        await this.findUnique(id);
+
+        const alunoAtualizado = await prisma.aluno.update({
+            where: { id: Number(id) },
+            data
+        });
+
+        return alunoAtualizado;
+    }
 }
 
 module.exports = new AlunoService();
